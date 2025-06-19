@@ -49,3 +49,15 @@ You can download all related SQL project files from the link below:
 
 🔗 [Download SQL Project Files from Google Drive](https://drive.google.com/drive/folders/1J3MzWAXH89cnY9JZtbYOzS2qMgtXbVQf?usp=sharing)
 
+
+   
+## 👨‍💻 Author
+
+**Utkrisht Jalan**  
+Aspiring Data Analyst skilled in SQL, Python, Power BI, and Excel.  
+[GitHub Profile](https://github.com/Utkrisht2026)
+
+---
+
+## ⭐ If you found this useful, don't forget to star this repo!
+
