@@ -42,3 +42,10 @@ This project contains various SQL scripts and notes related to database handling
 ---
 
 📁 *Project curated and maintained by Utkrisht Jalan*
+
+## 📦 Database Access
+
+You can download all related SQL project files from the link below:
+
+🔗 [Download SQL Project Files from Google Drive](https://drive.google.com/drive/folders/1J3MzWAXH89cnY9JZtbYOzS2qMgtXbVQf?usp=sharing)
+
