@@ -1,0 +1,79 @@
+SQL Query Explanation
+This query calculates the top 2 markets by gross sales in each region for fiscal year 2021. Here's a step-by-step breakdown:
+
+1. First CTE (etl1)
+Joins fact_sales_monthly (aliased as s) with fact_gross_price (aliased as p)
+
+Matches records on product_code and fiscal_year
+
+Calculates total_gross_sales by multiplying sold_quantity by gross_price
+
+2. Second CTE (cte2)
+Joins the results from etl1 with dim_customer (aliased as c)
+
+Filters for only fiscal year 2021
+
+Groups by market, region, and fiscal year
+
+Calculates the sum of gross sales (converted to millions and rounded to 2 decimal places)
+
+3. Third CTE (cte3)
+Takes the results from cte2
+
+Uses DENSE_RANK() to rank markets within each region by gross sales (highest sales = rank 1)
+
+The ranking is partitioned by region so each region gets its own ranking
+
+Final Output
+Selects all columns from cte3
+
+Filters to only include the top 2 ranked markets in each region (where rn <= 2)
+
+Orders the results by region and then by rank
+
+Summary
+This query identifies the top 2 performing markets (by gross sales) within each region for fiscal year 2021, showing the market name, region, fiscal year, gross sales amount in millions, and their rank within the region.
+
+
+
+
+
+SCRIPT ----->
+
+
+WITH etl1 AS (
+    SELECT 
+        s.customer_code,
+        s.product_code,
+        s.fiscal_year,
+        (s.sold_quantity * p.gross_price) AS total_gross_sales
+    FROM fact_sales_monthly s
+    JOIN fact_gross_price p
+        ON s.product_code = p.product_code
+        AND s.fiscal_year = p.fiscal_year
+),
+cte2 AS (
+    SELECT 
+        c.market,
+        c.region,
+        e.fiscal_year,
+        ROUND(SUM(e.total_gross_sales) / 1000000, 2) AS gross_sales_mil
+    FROM etl1 e
+    JOIN dim_customer c
+        ON e.customer_code = c.customer_code
+    WHERE e.fiscal_year = 2021
+    GROUP BY c.market, c.region, e.fiscal_year
+),
+cte3 AS (
+    SELECT 
+        market,
+        region,
+        fiscal_year,
+        gross_sales_mil,
+        DENSE_RANK() OVER (PARTITION BY region ORDER BY gross_sales_mil DESC) AS rn
+    FROM cte2
+)
+SELECT *
+FROM cte3
+WHERE rn <= 2
+ORDER BY region, rn;
